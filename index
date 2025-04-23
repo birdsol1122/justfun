@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>달새벽 서점 레토르트</title>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper-cream: #F7F1E5;
+      --soft-peach: #F8EAD8;
+      --warm-cream: #EDDBC7;
+      --book-brown: #8D7B68;
+      --gentle-brown: #A7727D;
+      --soft-purple: #E4D0D0;
+      --calm-blue: #C8DBBE;
+      --pale-sage: #D9E4DD;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Gowun Dodum', sans-serif;
+      background-color: var(--paper-cream);
+      color: var(--book-brown);
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .header {
+      background-color: var(--soft-peach);
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    
+    h1, h2, h3 {
+      color: var(--book-brown);
+    }
+    
+    .header h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+    }
+    
+    .card {
+      background-color: var(--warm-cream);
+      border: 1px solid var(--soft-peach);
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card h2 {
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: var(--book-brown);
+    }
+    
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+    
+    @media (max-width: 600px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .button {
+      display: inline-block;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'Gowun Dodum', sans-serif;
+      font-size: 14px;
+      transition: background-color 0.3s, transform 0.2s;
+      border: 1px solid transparent;
+      margin-right: 5px;
+      margin-bottom: 5px;
+      text-align: center;
+    }
+    
+    .button:hover {
+      transform: translateY(-2px);
+    }
+    
+    .button-primary {
+      background-color: var(--gentle-brown);
+      color: white;
+      border-color: var(--gentle-brown);
+    }
+    
+    .button-primary:hover {
+      background-color: rgba(167, 114, 125, 0.9);
+    }
+    
+    .button-secondary {
+      background-color: var(--calm-blue);
+      color: var(--book-brown);
+      border-color: var(--warm-cream);
+    }
+    
+    .button-secondary:hover {
+      background-color: var(--pale-sage);
+    }
+    
+    .button-tertiary {
+      background-color: var(--soft-purple);
+      color: var(--book-brown);
+      border-color: var(--pale-sage);
+    }
+    
+    .button-tertiary:hover {
+      background-color: rgba(228, 208, 208, 0.8);
+    }
+    
+    .button-disabled {
+      background-color: #e0e0e0;
+      color: #a0a0a0;
+      cursor: not-allowed;
+    }
+    
+    .button-disabled:hover {
+      transform: none;
+    }
+    
+    .button-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .quote-container {
+      max-height: 200px;
+      overflow-y: auto;
+      padding-right: 5px;
+    }
+    
+    .quote-item {
+      background-color: var(--soft-peach);
+      border: 1px solid var(--pale-sage);
+      border-radius: 6px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    
+    .quote-text {
+      font-style: italic;
+    }
+    
+    .quote-author {
+      text-align: right;
+      color: var(--gentle-brown);
+      font-size: 14px;
+    }
+    
+    .screen {
+      display: none;
+    }
+    
+    .active {
+      display: block;
+    }
+    
+    .notification {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: var(--gentle-brown);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 6px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s;
+      border: 1px solid var(--soft-peach);
+    }
+    
+    .notification.show {
+      opacity: 1;
+    }
+    
+    .dialogue-box {
+      background-color: var(--soft-peach);
+      border: 1px solid var(--warm-cream);
+      border-radius: 8px;
+      padding: 15px;
+      margin: 15px 0;
+    }
+    
+    .puzzle-slot {
+      border: 1px solid var(--gentle-brown);
+      background-color: white;
+      min-height: 40px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px;
+      font-weight: bold;
+    }
+    
+    .puzzle-options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 15px 0;
+    }
+    
+    .character-info {
+      font-style: italic;
+      color: var(--gentle-brown);
+      margin-bottom: 15px;
+    }
+    
+    .book-icon {
+      font-size: 20px;
+      margin-right: 5px;
+    }
+    
+    @media (max-width: 600px) {
+      .container {
+        padding: 10px;
+      }
+      
+      .button {
+        width: 100%;
+        margin-right: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 메인 화면 -->
+    <div id="main-screen" class="screen active">
+      <div class="header">
+        <h1>📚 달새벽 서점</h1>
+        <div class="status-bar">
+          <span id="day-display">날짜: 1일차</span>
+          <span id="time-display">시간: 10:00</span>
+          <span id="money-display">소지금: 1000원</span>
+        </div>
+      </div>
+      
+      <div class="grid">
+        <div class="card">
+          <h2>서점 관리</h2>
+          <button onclick="switchScreen('cafe-screen')" class="button button-primary">카페 관리하기</button>
+          <button onclick="advanceTime(2)" class="button button-secondary">시간 보내기 (2시간)</button>
+        </div>
+        
+        <div class="card">
+          <h2>새벽 열람 모드 <span id="night-mode-status">(비활성)</span></h2>
+          <div class="button-group">
+            <button onclick="startDialogue('드라마시나리오')" class="button button-disabled" id="drama-button" disabled>드라마 시나리오집과 대화하기</button>
+            <button onclick="startDialogue('사진집')" class="button button-disabled" id="photo-button" disabled>사진집과 대화하기</button>
+            <button onclick="startDialogue('고서번역서')" class="button button-disabled" id="ancient-button" disabled>고서 번역서와 대화하기</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="grid">
+        <div class="card">
+          <h2>명언 퍼즐</h2>
+          <button onclick="startPuzzle()" class="button button-secondary">명언 퍼즐 풀기</button>
+        </div>
+        
+        <div class="card">
+          <h2>문장 테라피 앨범</h2>
+          <div class="quote-container" id="quotes-container">
+            <p id="no-quotes-message">아직 수집된 명언이 없습니다.</p>
+            <!-- 여기에 명언들이 추가됩니다 -->
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 대화 화면 -->
+    <div id="dialogue-screen" class="screen">
+      <div class="header">
+        <h1 id="character-name">캐릭터 이름</h1>
+        <p id="character-personality" class="character-info">(캐릭터 성격)</p>
+      </div>
+      
+      <div class="card">
+        <div class="dialogue-box" id="dialogue-text">
+          대화 내용이 여기에 표시됩니다.
+        </div>
+        
+        <div class="button-group" id="dialogue-choices">
+          <!-- 선택지가 여기에 추가됩니다 -->
+        </div>
+      </div>
+      
+      <button onclick="switchScreen('main-screen')" class="button button-primary">대화 나가기</button>
+    </div>
+    
+    <!-- 카페 관리 화면 -->
+    <div id="cafe-screen" class="screen">
+      <div class="header">
+        <h1>카페 관리</h1>
+      </div>
+      
+      <div class="card">
+        <h2>인테리어 (현재 레벨: <span id="interior-level">1</span>)</h2>
+        <div class="button-group">
+          <div>
+            <button onclick="upgradeInterior(1)" class="button button-primary" id="interior-1">레벨 1 (200원)</button>
+            <button onclick="upgradeInterior(2)" class="button button-secondary" id="interior-2">레벨 2 (400원)</button>
+            <button onclick="upgradeInterior(3)" class="button button-secondary" id="interior-3">레벨 3 (600원)</button>
+          </div>
+          <div>
+            <button onclick="upgradeInterior(4)" class="button button-secondary" id="interior-4">레벨 4 (800원)</button>
+            <button onclick="upgradeInterior(5)" class="button button-secondary" id="interior-5">레벨 5 (1000원)</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <h2>음료 레시피 (현재 레벨: <span id="recipe-level">1</span>)</h2>
+        <div class="button-group">
+          <div>
+            <button onclick="upgradeRecipe(1)" class="button button-primary" id="recipe-1">레벨 1 (150원)</button>
+            <button onclick="upgradeRecipe(2)" class="button button-secondary" id="recipe-2">레벨 2 (300원)</button>
+            <button onclick="upgradeRecipe(3)" class="button button-secondary" id="recipe-3">레벨 3 (450원)</button>
+          </div>
+          <div>
+            <button onclick="upgradeRecipe(4)" class="button button-secondary" id="recipe-4">레벨 4 (600원)</button>
+            <button onclick="upgradeRecipe(5)" class="button button-secondary" id="recipe-5">레벨 5 (750원)</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="dialogue-box">
+          <p>인테리어와 음료 레시피를 향상시키면 서점 수익이 증가합니다!</p>
+          <p><strong>현재 예상 일일 수익: <span id="daily-income">90</span>원</strong></p>
+        </div>
+      </div>
+      
+      <button onclick="operateCafe()" class="button button-primary">카페 운영하고 돌아가기</button>
+    </div>
+    
+    <!-- 퍼즐 화면 -->
+    <div id="puzzle-screen" class="screen">
+      <div class="header">
+        <h1>명언 퍼즐</h1>
+      </div>
+      
+      <div class="card">
+        <div class="dialogue-box">
+          <p id="puzzle-text">퍼즐 텍스트가 여기에 표시됩니다.</p>
+          
+          <div class="grid" style="margin: 15px 0;">
+            <div class="puzzle-slot" id="puzzle-slot-0">___</div>
+            <div class="puzzle-slot" id="puzzle-slot-1">___</div>
+          </div>
+          
+          <div class="puzzle-options" id="puzzle-options">
+            <!-- 퍼즐 옵션들이 여기에 추가됩니다 -->
+          </div>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; margin-top: 15px;">
+          <button onclick="resetPuzzle()" class="button button-secondary">초기화</button>
+          <button onclick="submitPuzzle()" class="button button-primary">제출하기</button>
+        </div>
+      </div>
+      
+      <button onclick="switchScreen('main-screen')" class="button button-secondary">퍼즐 나가기</button>
+    </div>
+  </div>
+  
+  <div class="notification" id="notification">알림 메시지</div>
+  
+  <script>
+    // 게임 상태
+    const gameState = {
+      day: 1,
+      time: 10,
+      isNight: false,
+      money: 1000,
+      relationships: {
+        "드라마시나리오": 0,
+        "사진집": 0,
+        "고서번역서": 0
+      },
+      collectedQuotes: [],
+      cafeState: {
+        interior: 1,
+        recipe: 1
+      }
+    };
+    
+    // 캐릭터 데이터
+    const characters = {
+      "드라마시나리오": {
+        name: "드라마 시나리오집",
+        personality: "수다스럽고 드라마틱한",
+        dialogues: [
+          { text: "안녕! 난 드라마 시나리오집이야. 요즘 사람들 사이에서 무슨 이야기가 유행하는지 궁금해?", choices: ["응, 알려줘!", "지금은 바빠"] },
+          { text: "요즘엔 사랑보다 일상의 소소한 행복을 다루는 이야기가 인기래. '사소한 것들의 아름다움'이라는 말이 있잖아.", choices: ["그런 명언 좀 더 알려줘", "그런데 너는 어떤 이야기가 좋아?"] },
+          { text: "내가 좋아하는 건 역시 반전이 있는 이야기지! 삶도 그렇잖아. 예상치 못한 전개가 항상 기다리고 있으니까.", choices: ["와, 철학적이네", "오늘은 이만 대화를 마치자"] }
+        ]
+      },
+      "사진집": {
+        name: "사진집",
+        personality: "조용하고 관찰력 있는",
+        dialogues: [
+          { text: "(사진집이 조용히 미소짓고 있습니다)", choices: ["안녕, 오늘 기분이 어때?", "멋진 사진들을 갖고 있구나"] },
+          { text: "(책장을 넘기며) 때로는 말보다 이미지가 더 많은 것을 전달하지...", choices: ["어떤 사진이 가장 마음에 들어?", "사진 찍는 법에 대해 조언해줄래?"] },
+          { text: "빛을 찾는 것. 그게 사진의 핵심이야. 인생도 마찬가지지만...", choices: ["깊은 이야기네", "너의 페이지에서 가장 밝은 순간은?"] }
+        ]
+      },
+      "고서번역서": {
+        name: "고서 번역서",
+        personality: "지식이 풍부하지만 꼰대 같은",
+        dialogues: [
+          { text: "흠, 요즘 젊은이들은 고전을 읽지 않아서 안타깝군. 내 시절에는...", choices: ["고전 중에 추천할 만한 책이 있나요?", "흥미로운 역사적 사실을 알려주세요"] },
+          { text: "소크라테스가 말했듯, '너 자신을 알라'가 모든 지혜의 시작이네. 하지만 요즘 사람들은 자기성찰이 부족해.", choices: ["더 많은 명언을 알고 싶어요", "다른 철학자들은 어떤 생각을 했나요?"] },
+          { text: "지식은 힘이지만, 그것을 어떻게 사용하느냐가 더 중요하네. 손자병법에도 나오듯...", choices: ["와, 정말 박식하시네요", "오늘은 이만 대화를 마치겠습니다"] }
+        ]
+      }
+    };
+    
+    // 퍼즐 데이터
+    const quotePuzzles = [
+      {
+        quote: "사랑은 눈으로 보는 것이 아니라 마음으로 보는 것이다",
+        author: "셰익스피어",
+        puzzle: "사랑은 _으로 보는 것이 아니라 _으로 보는 것이다",
+        options: ["손", "눈", "마음", "귀", "입", "발"],
+        solution: ["눈", "마음"]
+      },
+      {
+        quote: "내일은 내일의 태양이 뜬다",
+        author: "스칼렛 오하라",
+        puzzle: "_은 _의 태양이 뜬다",
+        options: ["오늘", "내일", "어제", "아침", "저녁", "미래"],
+        solution: ["내일", "내일"]
+      },
+      {
+        quote: "진정한 발견의 여행은 새로운 풍경을 찾는 것이 아니라 새로운 눈을 갖는 것이다",
+        author: "마르셀 프루스트",
+        puzzle: "진정한 발견의 여행은 새로운 _을 찾는 것이 아니라 새로운 _을 갖는 것이다",
+        options: ["세계", "풍경", "지도", "인생", "길", "눈"],
+        solution: ["풍경", "눈"]
+      }
+    ];
+    
+    // 현재 상태 변수
+    let currentScreen = 'main-screen';
+    let activeNPC = null;
+    let dialogueIndex = 0;
+    let activePuzzle = null;
+    let puzzleAnswers = ["", ""];
+    
+    // 화면 전환 함수
+    function switchScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(screen => {
+        screen.classList.remove('active');
+      });
+      document.getElementById(screenId).classList.add('active');
+      currentScreen = screenId;
+    }
+    
+    // 시간 진행 함수
+    function advanceTime(hours) {
+      gameState.time = (gameState.time + hours) % 24;
+      
+      // 날짜 변경 확인
+      if (gameState.time < hours) {
+        gameState.day++;
+      }
+      
+      // 새벽 모드 확인 (0시~6시)
+      const wasNight = gameState.isNight;
+      gameState.isNight = (gameState.time >= 0 && gameState.time < 6);
+      
+      if (gameState.isNight && !wasNight) {
+        showNotification("새벽 열람 모드가 시작되었습니다! 책들이 깨어났어요.");
+      }
+      
+      updateUI();
+    }
+    
+    // 알림 표시 함수
+    function showNotification(message) {
+      const notification = document.getElementById('notification');
+      notification.textContent = message;
+      notification.classList.add('show');
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
+    }
+    
+    // UI 업데이트 함수
+    function updateUI() {
+      // 상태바 업데이트
+      document.getElementById('day-display').textContent = `날짜: ${gameState.day}일차`;
+      document.getElementById('time-display').textContent = `시간: ${gameState.time}:00`;
+      document.getElementById('money-display').textContent = `소지금: ${gameState.money}원`;
+      
+      // 새벽 모드 상태 업데이트
+      document.getElementById('night-mode-status').textContent = gameState.isNight ? '(활성)' : '(비활성)';
+      
+      // 대화 버튼 활성화/비활성화
+      const dialogueButtons = ['drama-button', 'photo-button', 'ancient-button'];
+      dialogueButtons.forEach(buttonId => {
+        const button = document.getElementById(buttonId);
+        if (gameState.isNight) {
+          button.classList.remove('button-disabled');
+          button.classList.add('button-tertiary');
+          button.disabled = false;
+        } else {
+          button.classList.add('button-disabled');
+          button.classList.remove('button-tertiary');
+          button.disabled = true;
+        }
+      });
+      
+      // 카페 관리 화면 업데이트
+      document.getElementById('interior-level').textContent = gameState.cafeState.interior;
+      document.getElementById('recipe-level').textContent = gameState.cafeState.recipe;
+      
+      // 일일 수익 계산 및 표시
+      const dailyIncome = (gameState.cafeState.interior * 50) + (gameState.cafeState.recipe * 40);
+      document.getElementById('daily-income').textContent = dailyIncome;
+      
+      // 인테리어 버튼 상태 업데이트
+      for (let i = 1; i <= 5; i++) {
+        const button = document.getElementById(`interior-${i}`);
+        if (i === gameState.cafeState.interior) {
+          button.classList.remove('button-secondary');
+          button.classList.add('button-primary');
+        } else {
+          button.classList.remove('button-primary');
+          button.classList.add('button-secondary');
+        }
+      }
+      
+      // 레시피 버튼 상태 업데이트
+      for (let i = 1; i <= 5; i++) {
+        const button = document.getElementById(`recipe-${i}`);
+        if (i === gameState.cafeState.recipe) {
+          button.classList.remove('button-secondary');
+          button.classList.add('button-primary');
+        } else {
+          button.classList.remove('button-primary');
+          button.classList.add('button-secondary');
+        }
+      }
+      
+      // 명언 앨범 업데이트
+      const quotesContainer = document.getElementById('quotes-container');
+      const noQuotesMessage = document.getElementById('no-quotes-message');
+      
+      if (gameState.collectedQuotes.length > 0) {
+        noQuotesMessage.style.display = 'none';
+        
+        // 기존 명언 제거
+        while (quotesContainer.children.length > 1) {
+          quotesContainer.removeChild(quotesContainer.lastChild);
+        }
+        
+        // 새 명언 추가
+        gameState.collectedQuotes.forEach(quote => {
+          const quoteElement = document.createElement('div');
+          quoteElement.className = 'quote-item';
+          
+          const quoteText = document.createElement('p');
+          quoteText.className = 'quote-text';
+          quoteText.textContent = `"${quote.text}"`;
+          
+          const quoteAuthor = document.createElement('p');
+          quoteAuthor.className = 'quote-author';
+          quoteAuthor.textContent = `- ${quote.author}`;
+          
+          quoteElement.appendChild(quoteText);
+          quoteElement.appendChild(quoteAuthor);
+          quotesContainer.appendChild(quoteElement);
+        });
+      } else {
+        noQuotesMessage.style.display = 'block';
+      }
+    }
+    
+    // 대화 시작 함수
+    function startDialogue(npcId) {
+      if (!gameState.isNight) {
+        showNotification("책들은 새벽(0시~6시)에만 대화할 수 있어요.");
+        return;
+      }
+      
+      activeNPC = npcId;
+      dialogueIndex = 0;
+      
+      // 캐릭터 정보 설정
+      const character = characters[npcId];
+      document.getElementById('character-name').textContent = character.name;
+      document.getElementById('character-personality').textContent = `(${character.personality})`;
+      
+      // 대화 내용 설정
+      const dialogue = character.dialogues[dialogueIndex];
+      document.getElementById('dialogue-text').textContent = dialogue.text;
+      
+      // 선택지 설정
+      const choicesContainer = document.getElementById('dialogue-choices');
+      choicesContainer.innerHTML = '';
+      
+      dialogue.choices.forEach((choice, index) => {
+        const button = document.createElement('button');
+        button.className = 'button button-tertiary';
+        button.textContent = choice;
+        button.onclick = () => continueDialogue(index);
+        choicesContainer.appendChild(button);
+      });
+      
+      switchScreen('dialogue-screen');
+    }
+    
+    // 대화 계속 함수
+    function continueDialogue(choiceIndex) {
+      // 관계도 향상
+      gameState.relationships[activeNPC]++;
+      
+      // 다음 대화로 이동
+      if (dialogueIndex < characters[activeNPC].dialogues.length - 1) {
+        dialogueIndex++;
+        
+        // 새 대화 내용 설정
+        const dialogue = characters[activeNPC].dialogues[dialogueIndex];
+        document.getElementById('dialogue-text').textContent = dialogue.text;
+        
+        // 새 선택지 설정
+        const choicesContainer = document.getElementById('dialogue-choices');
+        choicesContainer.innerHTML = '';
+        
+        dialogue.choices.forEach((choice, index) => {
+          const button = document.createElement('button');
+          button.className = 'button button-tertiary';
+          button.textContent = choice;
+          button.onclick = () => continueDialogue(index);
+          choicesContainer.appendChild(button);
+        });
+      } else {
+        // 대화 종료
+        switchScreen('main-screen');
+        showNotification(`${characters[activeNPC].name}과의 대화가 끝났습니다.`);
+      }
+    }
+    
+    // 카페 인테리어 업그레이드 함수
+    function upgradeInterior(level) {
+      const cost = level * 200;
+      
+      if (gameState.money >= cost) {
+        gameState.money -= cost;
+        gameState.cafeState.interior = level;
+        showNotification(`인테리어를 레벨 ${level}로 업그레이드했습니다!`);
+        updateUI();
+      } else {
+        showNotification("돈이 부족합니다!");
+      }
+    }
+    
+    // 음료 레시피 업그레이드 함수
+    function upgradeRecipe(level) {
+      const cost = level * 150;
+      
+      if (gameState.money >= cost) {
+        gameState.money -= cost;
+        gameState.cafeState.recipe = level;
+        showNotification(`음료 레시피를 레벨 ${level}로 업그레이드했습니다!`);
+        updateUI();
+      } else {
+        showNotification("돈이 부족합니다!");
+      }
+    }
+    
+    // 카페 운영 함수
+    function operateCafe() {
+      // 시간 진행
+      advanceTime(8);
+      
+      // 수익 계산 및 추가
+      const income = (gameState.cafeState.interior * 50) + (gameState.cafeState.recipe * 40);
+      gameState.money += income;
+      
+      showNotification(`카페 운영을 마치고 ${income}원의 수익을 얻었습니다!`);
+      switchScreen('main-screen');
+    }
+    
+    // 퍼즐 시작 함수
+    function startPuzzle() {
+      // 랜덤 퍼즐 선택
+      const randomIndex = Math.floor(Math.random() * quotePuzzles.length);
+      activePuzzle = quotePuzzles[randomIndex];
+      puzzleAnswers = ["", ""];
+      
+      // 퍼즐 텍스트 설정
+      document.getElementById('puzzle-text').textContent = activePuzzle.puzzle;
+      
+      // 퍼즐 슬롯 초기화
+      document.getElementById('puzzle-slot-0').textContent = "___";
+      document.getElementById('puzzle-slot-1').textContent = "___";
+      
+      // 옵션 버튼 설정
+      const optionsContainer = document.getElementById('puzzle-options');
+      optionsContainer.innerHTML = '';
+      
+      activePuzzle.options.forEach(option => {
+        const button = document.createElement('button');
+        button.className = 'button button-tertiary';
+        button.textContent = option;
+        button.onclick = () => selectPuzzleOption(option);
+        optionsContainer.appendChild(button);
+      });
+      
+      switchScreen('puzzle-screen');
+    }
+    
+    // 퍼즐 옵션 선택 함수
+    function selectPuzzleOption(option) {
+      const emptyIndex = puzzleAnswers.findIndex(a => a === "");
+      if (emptyIndex !== -1) {
+        puzzleAnswers[emptyIndex] = option;
+        document.getElementById(`puzzle-slot-${emptyIndex}`).textContent = option;
+      }
+    }
+    
+    // 퍼즐 초기화 함수
+    function resetPuzzle() {
+      puzzleAnswers = ["", ""];
+      document.getElementById('puzzle-slot-0').textContent = "___";
+      document.getElementById('puzzle-slot-1').textContent = "___";
+    }
+    
+    // 퍼즐 제출 함수
+    function submitPuzzle() {
+      // 모든 슬롯이 채워졌는지 확인
+      if (puzzleAnswers.some(answer => answer === "")) {
+        showNotification("모든 빈칸을 채워주세요!");
+        return;
+      }
+      
+      // 정답 확인
+      const isCorrect = puzzleAnswers.every((answer, index) => 
+        answer === activePuzzle.solution[index]
+      );
+      
+      if (isCorrect) {
+        // 명언 수집 및 보상
+        gameState.collectedQuotes.push({
+          text: activePuzzle.quote,
+          author: activePuzzle.author
+        });
+        gameState.money += 100;
+        
+        showNotification("정답입니다! 명언이 앨범에 추가되었습니다.");
+        switchScreen('main-screen');
+        updateUI();
+      } else {
+        showNotification("틀렸습니다. 다시 시도해보세요.");
+        resetPuzzle();
+      }
+    }
+    
+    // 초기 UI 업데이트
+    updateUI();
+  </script>
+</body>
+</html>
